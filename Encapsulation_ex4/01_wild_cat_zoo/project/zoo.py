@@ -35,8 +35,8 @@ class Zoo:
         return "Not enough space for worker"
 
     def fire_worker(self, worker_name:str) -> str:
-        this_worker = [w for w in self.workers if w.name == worker_name][0]
         try:
+            this_worker = [w for w in self.workers if w.name == worker_name][0]
             self.workers.remove(this_worker)
             return f"{this_worker.name} fired successfully"
         except ValueError:
@@ -50,10 +50,18 @@ class Zoo:
 
         return "You have no budget to pay your workers. They are unhappy"
 
-    def profit_amount(self, amount):
+    def tend_animals(self):
+        animal_expenses = sum([e.money_for_care for e in self.animals])
+        if animal_expenses <= self.__budget:
+            self.__budget -= animal_expenses
+            return f"You tended all the animals. They are happy. Budget left: {self.__budget}"
+
+        return  "You have no budget to tend the animals. They are unhappy."
+
+    def profit(self, amount):
         self.__budget += amount
 
-    def animal_status(self):
+    def animals_status(self):
         result = f"You have {len(self.animals)} animals\n"
         lions = [a for a in self.animals if a.__class__.__name__ == "Lion"]
         tigers = [a for a in self.animals if a.__class__.__name__ == "Tiger"]
@@ -69,10 +77,35 @@ class Zoo:
         for t in tigers:
             result += f"{t}\n"
 
-        result += f"----- {len(cheetahs)} Cheetahs:"
+        result += f"----- {len(cheetahs)} Cheetahs:\n"
 
         for ch in cheetahs:
             result += f"{ch}\n"
+
+        return result[:-1]
+
+    def workers_status(self):
+
+        result = f"You have {len(self.workers)} workers\n"
+
+        keepers = [w for w in self.workers if w.__class__.__name__ == "Keeper"]
+        caretakers = [w for w in self.workers if w.__class__.__name__ == "Caretaker"]
+        vets = [w for w in self.workers if w.__class__.__name__ == "Vet"]
+
+        result += f"----- {len(keepers)} Keepers:\n"
+
+        for k in keepers:
+            result += f"{k}\n"
+
+        result += f"----- {len(caretakers)} Caretakers:\n"
+
+        for c in caretakers:
+            result += f"{c}\n"
+
+        result += f"----- {len(vets)} Vets:\n"
+
+        for v in vets:
+            result += f"{v}\n"
 
         return result[:-1]
 
