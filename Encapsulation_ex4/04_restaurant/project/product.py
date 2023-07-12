@@ -1,5 +1,5 @@
 class Product:
-    def __init__(self, name: str, price: float):
+    def __init__(self, name: str, price: float) -> None:
         self.__name = name
         self.__price = price
 
