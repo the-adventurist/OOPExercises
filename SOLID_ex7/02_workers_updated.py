@@ -92,6 +92,8 @@ break_manager.lunch_break()
 work_manager.set_worker(Robot())
 work_manager.manage()
 
-
-break_manager.set_worker(Robot())
-break_manager.lunch_break()
+try:
+    break_manager.set_worker(Robot())
+    break_manager.lunch_break()
+except:
+    pass
