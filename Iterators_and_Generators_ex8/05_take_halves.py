@@ -1,22 +1,19 @@
 def solution():
     def integers():
         num = 1
+
         while True:
             yield num
             num += 1
 
     def halves():
-
         for i in integers():
-            result = i / 2
-            yield result
+            yield i / 2
 
-    def take(n, result):
-        while n:
-            yield result
-            n -= 1
+    def take(n, seq):
+        return [next(seq) for _ in range(n)]
 
-        return (take(n, result), halves, integers)
+    return (take, halves, integers)
 
 
 

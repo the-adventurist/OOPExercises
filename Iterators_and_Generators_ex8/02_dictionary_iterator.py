@@ -1,28 +1,20 @@
 class dictionary_iter():
-    def __init__(self, dictionary) -> None:
-        self.dictionary = dictionary
+    def __init__(self, dictionary: dict) -> None:
+        self.items = list(dictionary.items())
+        self.index = -1
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        for k, v in self.dictionary.items():
-            del self.dictionary[k]
-            if isinstance(k, str) and isinstance(v, str):
-                return f"('{k}', '{v}')"
-            elif isinstance(k, str):
-                return f"('{k}', {v})"
-            elif isinstance(v, str):
-                return f"({k}, '{v}')"
-            else:
-                return f"({k}, {v})"
-        else:
+        if self.index >= len(self.items) - 1:
             raise StopIteration
 
+        self.index += 1
 
-result = dictionary_iter({"name": "Peter",
-"age": 24})
+        return self.items[self.index]
+
+
+result = dictionary_iter({1: "1", 2: "2"})
 for x in result:
- print(x)
-
-
+    print(x)
