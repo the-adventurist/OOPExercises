@@ -3,8 +3,6 @@ from typing import List
 from project.route import Route
 from project.user import User
 from project.vehicles.base_vehicle import BaseVehicle
-from project.vehicles.cargo_van import CargoVan
-from project.vehicles.passenger_car import PassengerCar
 
 
 class ManagingApp:
@@ -55,7 +53,8 @@ class ManagingApp:
 
         new_route = Route(start_point, end_point, length, route_id=len(self.routes) + 1)
         self.routes.append(new_route)
-        longer_route = [r for r in self.routes if r.length > length]
+        longer_route = [r for r in self.routes if r.start_point == start_point
+                        if r.end_point == end_point if r.length > length]
         if longer_route:
             longer_route[0].is_locked = True
 
@@ -63,15 +62,13 @@ class ManagingApp:
 
     def make_trip(self, driving_license_number: str, license_plate_number: str,
                   route_id: int,  is_accident_happened: bool):
-        this_route = [r for r in self.routes if r.is_locked is True]
-        if this_route:
-            self.routes.remove(this_route[0])
+        this_user_blocked = [u for u in self.users if u.driving_license_number == driving_license_number if u.is_blocked is True]
+        if this_user_blocked:
             return f"User {driving_license_number} is blocked in the platform! This trip is not allowed."
 
         this_vehicle = [v for v in self.vehicles if v.license_plate_number == license_plate_number
                         if v.is_damaged is True]
         if this_vehicle:
-            self.vehicles.remove(this_vehicle[0])
             return f"Vehicle {license_plate_number} is damaged! This trip is not allowed."
 
         this_route = [r for r in self.routes if r.route_id == route_id if r.is_locked is True]
@@ -80,3 +77,46 @@ class ManagingApp:
             return f"Route {route_id} is locked! This trip is not allowed."
 
         drive_vehicle = [v for v in self.vehicles if v.license_plate_number == license_plate_number]
+        this_route_unlocked = [r.length for r in self.routes if r.route_id == route_id]
+        if drive_vehicle:
+            drive_vehicle[0].drive(this_route_unlocked[0])
+
+        this_user = [u for u in self.users if u.driving_license_number == driving_license_number]
+        if is_accident_happened:
+            drive_vehicle[0].is_damaged = True
+
+            this_user[0].decrease_rating()
+        else:
+            this_user[0].increase_rating()
+
+        if drive_vehicle:
+            status = "OK" if drive_vehicle[0].is_damaged is False else "Damaged"
+
+            return f"{drive_vehicle[0].brand} {drive_vehicle[0].model} " \
+                f"License plate: {drive_vehicle[0].license_plate_number}" \
+                f" Battery: {drive_vehicle[0].battery_level}% Status: {status}"
+
+    def repair_vehicles(self, count: int):
+        damaged_vehicles = [v for v in self.vehicles if v.is_damaged is True]
+        self.vehicles = [v for v in self.vehicles if v.is_damaged is False]
+        damaged_vehicles.sort(key=lambda x: (x.brand, x.model))
+        repaired_vehicles = 0
+        for repaired_vehicle in range(1, count):
+            if damaged_vehicles:
+                vehicle_to_repair = damaged_vehicles.pop(0)
+                vehicle_to_repair.change_status()
+                vehicle_to_repair.recharge()
+                self.vehicles.append(vehicle_to_repair)
+                repaired_vehicles += 1
+            else:
+                break
+
+        return f"{repaired_vehicles} vehicles were successfully repaired!"
+
+    def users_report(self):
+        sorted_users = sorted(self.users, key=lambda x: - x.rating)
+        for_printing = "*** E-Drive-Rent ***" + "\n"
+        for user in sorted_users:
+            for_printing += user.__str__() + "\n"
+
+        return for_printing

@@ -46,7 +46,7 @@ class User:
 
     def decrease_rating(self):
         self.rating -= 2
-        if self.rating < 0:
+        if self.rating <= 0:
             self.rating = 0
             self.is_blocked = True
 
