@@ -1,10 +1,12 @@
 class Route:
+    MIN_LENGTH = 1.00
+
     def __init__(self, start_point: str, end_point: str, length: float, route_id: int):
         self.start_point = start_point
         self.end_point = end_point
         self.length = length
         self.route_id = route_id
-        self.is_locked: bool = False
+        self.is_locked = False
 
     @property
     def start_point(self):
@@ -12,9 +14,8 @@ class Route:
 
     @start_point.setter
     def start_point(self, value):
-        if value.strip() == "":
+        if not value.strip():
             raise ValueError("Start point cannot be empty!")
-
         self.__start_point = value
 
     @property
@@ -23,9 +24,8 @@ class Route:
 
     @end_point.setter
     def end_point(self, value):
-        if value.strip() == "":
+        if not value.strip():
             raise ValueError("End point cannot be empty!")
-
         self.__end_point = value
 
     @property
@@ -34,8 +34,9 @@ class Route:
 
     @length.setter
     def length(self, value):
-        if value < 1.00:
-            raise ValueError(f"Length cannot be less than {1.00:.2f} kilometer!")
-
+        if value < self.MIN_LENGTH:
+            raise ValueError(f"Length cannot be less than {self.MIN_LENGTH:.2f} kilometer!")
         self.__length = value
 
+    # def change_status(self):
+    #     self.is_locked = not self.is_locked

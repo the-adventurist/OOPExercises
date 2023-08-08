@@ -3,6 +3,7 @@ from typing import List
 from project.route import Route
 from project.user import User
 from project.vehicles.base_vehicle import BaseVehicle
+from project.vehicles.base_vehicle import CargoVan
 
 
 class ManagingApp:
