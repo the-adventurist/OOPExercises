@@ -28,5 +28,6 @@ class Musician(ABC):
         self.__age = value
 
     @abstractmethod
-    def learn_new_skill(self, new_skill: str):
+    def learn_new_skill(self, new_skill):
         ...
+

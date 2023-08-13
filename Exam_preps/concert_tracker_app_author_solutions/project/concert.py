@@ -1,6 +1,4 @@
 class Concert:
-    AVAILABLE_GENRES = ("Metal", "Rock", "Jazz")
-
     def __init__(self, genre: str, audience: int, ticket_price: float, expenses: float, place: str):
         self.genre = genre
         self.audience = audience
@@ -14,7 +12,7 @@ class Concert:
 
     @genre.setter
     def genre(self, value):
-        if value not in self.AVAILABLE_GENRES:
+        if value not in ["Metal", "Rock", "Jazz"]:
             raise ValueError(f"Our group doesn't play {value}!")
         self.__genre = value
 
@@ -60,4 +58,3 @@ class Concert:
 
     def __str__(self):
         return f"{self.genre} concert at {self.place}."
-
